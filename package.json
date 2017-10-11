@@ -1,0 +1,28 @@
+{
+  "name": "hexlifegame",
+  "version": "0.0.1",
+  "description": "HexLifeGame with elm",
+  "main": "index.js",
+  "scripts": {
+    "build": "webpack",
+    "dev": "webpack-dev-server --hot --port 3000",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/uzimaru0000/HexLifeGame.git"
+  },
+  "author": "uzimaru0000",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/uzimaru0000/HexLifeGame/issues"
+  },
+  "homepage": "https://github.com/uzimaru0000/HexLifeGame#readme",
+  "devDependencies": {
+    "elm-hot-loader": "^0.5.4",
+    "elm-webpack-loader": "^4.3.1",
+    "file-loader": "^1.1.5",
+    "webpack": "^3.6.0",
+    "webpack-dev-server": "^2.9.1"
+  }
+}
