@@ -1,30 +1,26 @@
 module Main exposing (..)
 
 import Html exposing (Html, program)
+import Models exposing (..)
 import Svg exposing (..)
 import Svg.Attributes exposing (..)
 
-type alias Model = 
-    { x : Int
-    , y : Int
-    }
-
 init : ( Model, Cmd Msg )
 init =
-    ( { x = 100, y = 100 }, Cmd.none )
+    ( initModel, Cmd.none )
 
 type Msg = NoOp
 
 view : Model -> Html Msg
 view model =
     svg [ width "320", height "320", viewBox "0 0 320 320" ]
-        [ 
-            rect [ x <| toString model.x 
-                 , y <| toString model.y 
-                 , width "32"
-                 , height "32"
-                 ] []
-        ]
+    <| List.map (\cell ->
+        rect [ x <| toString cell.position.x
+             , y <| toString cell.position.y 
+             , width <| toString cell.size
+             , height <| toString cell.size
+             ] []
+    ) model
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
