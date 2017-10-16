@@ -11,6 +11,11 @@ type alias Point =
     , y : Int
     }
 
+type alias Vector =
+    { x : Float
+    , y : Float
+    }
+
 type alias Cell =
     { id : Point
     , status : Status
@@ -26,6 +31,10 @@ cellColor status =
 pointToString : Point -> String
 pointToString p = 
     toString p.x ++ " " ++ toString p.y
+
+vectorToString : Vector -> String
+vectorToString v =
+    toString v.x ++ " " ++ toString v.y
 
 newState : Int -> Random.Generator (List Status)
 newState length =
@@ -64,16 +73,3 @@ zip xs ys =
     case (xs, ys) of
         (x :: xTail, y :: yTail) -> (x, y) :: zip xTail yTail
         (_, _) -> []
-
--- poly : Int -> List Point
--- poly n =
---     let
---         angle = 2 * pi / (toFloat n)
---     in
---         List.range 0 5
---             |> List.map (\x -> Point (cos <| angle * (toFloat x)) (sin <| angle * (toFloat x)))
-
--- hex : Float -> Point -> List Point
--- hex size base =
---     List.map (\p -> { p | x = p.x * size, y = p.y * size }) (poly 6)
---     |> List.map (\p -> { p | x = p.x + base.x, y = p.y + base.y })

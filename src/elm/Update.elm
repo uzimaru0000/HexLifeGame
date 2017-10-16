@@ -11,8 +11,6 @@ rule count state =
         (_, Dead) -> Dead
         (2, Living) -> Living
         (3, Living) -> Living
-        -- (4, Living) -> Living
-        -- (5, Living) -> Living
         (_, Living) -> Dead
 
 countState : List Status -> Int

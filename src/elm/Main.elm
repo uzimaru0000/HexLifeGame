@@ -12,9 +12,12 @@ import Messages exposing (..)
 init : ( Model, Cmd Msg )
 init =
     ( [],  Random.generate NewGame (newCells cellSize))
+    -- initModel ! []
 
 subscriptions : Model -> Sub Msg
-subscriptions model = Time.every (Time.millisecond * 40) (always NextTick)
+subscriptions model = 
+    -- Time.every (Time.millisecond * 40) (always NextTick)
+    Sub.none
 
 main : Program Never Model Msg
 main = 
