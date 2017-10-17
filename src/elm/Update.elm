@@ -15,7 +15,6 @@ rule count state =
     else
         case count of
             3 -> Living
-            4 -> Living
             _ -> Dead
 
 countState : List Status -> Int

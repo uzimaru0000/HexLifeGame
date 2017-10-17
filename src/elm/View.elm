@@ -46,31 +46,52 @@ colorToString color =
         toString g ++ "," ++
         toString b ++ ")"
 
-view : Model -> Html Msg
-view {cells, gameStatus} =
+hexView : List Cell -> Html Msg
+hexView cells =
     let
         w = hexWidth 16
         edge = hexEdge 16
     in
-        div [] 
-            [ svg [ width <| toString screenSize.x, height <| toString screenSize.y, viewBox <| "0 0 " ++ (pointToString screenSize) ]
-              <| List.map (\cell ->
+        svg [ width <| toString screenSize.x, height <| toString screenSize.y, viewBox <| "0 0 " ++ (pointToString screenSize) ]
+            <| List.map (\cell ->
                 let
                     offs = (toFloat <| cell.id.y % 2) / 2
                     x = (toFloat cell.id.x + offs) * w * 2 + edge
                     y = (toFloat cell.id.y) * (edge / 2 + 16) + w
                     vert = hex 16 (Vector x y)
-                        |> List.map vectorToString
-                        |> String.join " "
+                    |> List.map vectorToString
+                    |> String.join " "
                 in
                     polygon [ points vert
-                            , fill <| colorToString <| cellColor cell.status
-                            , stroke <| colorToString <| Color.black
-                            , onClick (Flip cell)
-                            ] []
-              ) cells
-            , Html.br [] []
-            , button [ onClick Stop ] [ Html.text <| if gameStatus then "Stop" else "Start" ]
-            , button [ onClick Reset ] [ Html.text "Reset" ]
-            , button [ onClick Clear ] [ Html.text "Clear" ]
-            ]
+                    , fill <| colorToString <| cellColor cell.status
+                    , stroke <| colorToString <| Color.black
+                    , onClick (Flip cell) ] []
+            ) cells
+
+normalView : List Cell -> Html Msg
+normalView cells =
+    let
+        w = screenSize.x // cellSize.x
+        h = screenSize.y // cellSize.y
+    in
+    svg [ width <| toString screenSize.x, height <| toString screenSize.y, viewBox <| "0 0 " ++ (pointToString screenSize) ]
+        <| List.map (\cell ->
+            rect [ x <| toString <| cell.id.x * w
+                 , y <| toString <| cell.id.y * h
+                 , fill <| colorToString <| cellColor cell.status
+                 , stroke <| colorToString <| Color.black
+                 , width <| toString w
+                 , height <| toString h
+                 , onClick (Flip cell) 
+                 ] []
+        ) cells
+
+view : Model -> Html Msg
+view {cells, gameStatus} =
+    div [] 
+        [ normalView cells
+        , Html.br [] []
+        , button [ onClick Stop ] [ Html.text <| if gameStatus then "Stop" else "Start" ]
+        , button [ onClick Reset ] [ Html.text "Reset" ]
+        , button [ onClick Clear ] [ Html.text "Clear" ]
+        ]

@@ -53,7 +53,7 @@ newCell size (index, state) =
     let
         id = Point (index % size.x) (index // size.y)
     in
-        connectCell id
+        normalCellConnect id
         |> Cell id state
 
 connectCell : Point -> List Point
@@ -64,4 +64,16 @@ connectCell id =
     , Point (id.x+1) id.y
     , Point (id.x-1) (id.y+1)
     , Point id.x (id.y+1)
+    ]
+
+normalCellConnect : Point -> List Point
+normalCellConnect id =
+    [ Point (id.x-1) (id.y-1)
+    , Point id.x (id.y-1)
+    , Point (id.x+1) (id.y-1)
+    , Point (id.x-1) id.y
+    , Point (id.x+1) id.y
+    , Point (id.x-1) (id.y+1)
+    , Point id.x (id.y+1)
+    , Point (id.x+1) (id.y+1)
     ]

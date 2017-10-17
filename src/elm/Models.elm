@@ -8,7 +8,7 @@ type alias Model =
     }
 
 cellSize : Point
-cellSize = Point 20 20
+cellSize = Point 32 32
 
 -- initModel : Model
 -- initModel =
