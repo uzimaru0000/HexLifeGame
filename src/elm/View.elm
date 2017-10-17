@@ -1,6 +1,7 @@
 module View exposing (..)
 
-import Html exposing (Html)
+import Html exposing (Html, div, text, button)
+import Html.Events exposing (onClick)
 import Svg exposing (..)
 import Svg.Attributes exposing (..)
 import Color exposing (..)
@@ -46,23 +47,30 @@ colorToString color =
         toString b ++ ")"
 
 view : Model -> Html Msg
-view model =
+view {cells, gameStatus} =
     let
-        w = hexWidth 32
-        edge = hexEdge 32
+        w = hexWidth 16
+        edge = hexEdge 16
     in
-        svg [ width <| toString screenSize.x, height <| toString screenSize.y, viewBox <| "0 0 " ++ (pointToString screenSize) ]
-        <| List.map (\cell ->
-            let
-                offs = (toFloat <| cell.id.y % 2) / 2
-                x = (toFloat cell.id.x + offs) * w * 2
-                y = (toFloat cell.id.y) * (edge / 2 + 32)
-                vert = hex 32 (Vector x y)
-                       |> List.map vectorToString
-                       |> String.join " "
-            in
-                polygon [ points vert
-                        , fill <| colorToString <| cellColor cell.status
-                        , stroke <| colorToString <| Color.black
-                        ] []
-        ) model
+        div [] 
+            [ svg [ width <| toString screenSize.x, height <| toString screenSize.y, viewBox <| "0 0 " ++ (pointToString screenSize) ]
+              <| List.map (\cell ->
+                let
+                    offs = (toFloat <| cell.id.y % 2) / 2
+                    x = (toFloat cell.id.x + offs) * w * 2 + edge
+                    y = (toFloat cell.id.y) * (edge / 2 + 16) + w
+                    vert = hex 16 (Vector x y)
+                        |> List.map vectorToString
+                        |> String.join " "
+                in
+                    polygon [ points vert
+                            , fill <| colorToString <| cellColor cell.status
+                            , stroke <| colorToString <| Color.black
+                            , onClick (Flip cell)
+                            ] []
+              ) cells
+            , Html.br [] []
+            , button [ onClick Stop ] [ Html.text <| if gameStatus then "Stop" else "Start" ]
+            , button [ onClick Reset ] [ Html.text "Reset" ]
+            , button [ onClick Clear ] [ Html.text "Clear" ]
+            ]

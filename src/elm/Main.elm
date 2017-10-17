@@ -11,13 +11,15 @@ import Messages exposing (..)
 
 init : ( Model, Cmd Msg )
 init =
-    ( [],  Random.generate NewGame (newCells cellSize))
+    ( Model [] False,  Random.generate NewGame (newCells cellSize))
     -- initModel ! []
 
 subscriptions : Model -> Sub Msg
 subscriptions model = 
-    -- Time.every (Time.millisecond * 40) (always NextTick)
-    Sub.none
+    if model.gameStatus then
+        Time.every (Time.millisecond * 40) (always NextTick)
+    else
+        Sub.none
 
 main : Program Never Model Msg
 main = 

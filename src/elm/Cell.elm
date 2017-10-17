@@ -39,13 +39,13 @@ vectorToString v =
 newState : Int -> Random.Generator (List Status)
 newState length =
     Random.float 0.0 1.0
-    |> Random.map (\n -> if n >= 0.5 then Living else Dead)
+    |> Random.map (\n -> if n >= 0.8 then Living else Dead)
     |> Random.list length
 
 newCells : Point -> Random.Generator (List Cell)
 newCells size =
     newState (size.x * size.y)
-    |> Random.map (\xs -> zip (List.range 0 (size.x * size.y - 1)) xs)
+    |> Random.map (\xs -> List.indexedMap (,) xs)
     |> Random.map (\xs -> List.map (newCell size) xs)
 
 newCell : Point -> (Int, Status) -> Cell
@@ -60,16 +60,8 @@ connectCell : Point -> List Point
 connectCell id = 
     [ Point (id.x-1) (id.y-1)
     , Point id.x (id.y-1)
-    , Point (id.x+1) (id.y-1)
     , Point (id.x-1) id.y
     , Point (id.x+1) id.y
     , Point (id.x-1) (id.y+1)
     , Point id.x (id.y+1)
-    , Point (id.x+1) (id.y+1)
     ]
-
-zip : List a -> List b -> List (a, b)
-zip xs ys =
-    case (xs, ys) of
-        (x :: xTail, y :: yTail) -> (x, y) :: zip xTail yTail
-        (_, _) -> []
