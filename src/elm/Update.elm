@@ -5,11 +5,22 @@ import Random exposing (..)
 import Models exposing (..)
 import Messages exposing (..)
 
-rule : Int -> Status -> Status
-rule count state =
+normalRule : Int -> Status -> Status
+normalRule count state =
     if state == Living then
         case count of
             2 -> Living
+            3 -> Living
+            _ -> Dead
+    else
+        case count of
+            3 -> Living
+            _ -> Dead
+
+hexRule : Int -> Status -> Status
+hexRule count state =
+    if state == Living then
+        case count of
             3 -> Living
             _ -> Dead
     else
@@ -35,30 +46,34 @@ flipStatus status =
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
-        NewGame cells -> Model cells False ! []
+        NewGame cells -> { model | cells = cells } ! []
         Start -> model ! []
         NextTick ->
-            Model (List.map (\cell -> 
-                        let
-                            nowState = cell.status
-                            nextState = collectCell model.cells cell.adjacency
-                                        |> List.map (\x -> x.status)
-                                        |> countState
-                                        |> flip rule nowState
-                        in
-                            { cell | status = nextState }
-                     ) model.cells) model.gameStatus
-            |> flip (!) []
+            let
+                newCells = (List.map (\cell -> 
+                                        let
+                                            nowState = cell.status
+                                            nextState = collectCell model.cells cell.adjacency
+                                            |> List.map (\x -> x.status)
+                                            |> countState
+                                            |> flip (if model.gameMode == "Normal" then normalRule else hexRule) nowState
+                                        in
+                                            { cell | status = nextState }
+                                     ) model.cells) 
+            in
+                { model | cells = newCells } ! [] 
         Stop -> { model | gameStatus = not model.gameStatus} ! []
         Flip cell -> 
             let
-                newCell = List.map (\x -> if x == cell then {x | status = flipStatus cell.status} else x) model.cells
+                newCells = List.map (\x -> if x == cell then {x | status = flipStatus cell.status} else x) model.cells
             in
-                Model newCell model.gameStatus ! []
+                { model | cells = newCells} ! []
         Reset ->
-            (Model [] False, Random.generate NewGame (newCells cellSize))
+            (Model [] False model.gameMode, Random.generate NewGame (newCells cellSize))
         Clear ->
             let
                 newCells = List.map (\x -> {x | status = Dead }) model.cells
             in
-                Model newCells False ! []
+                { model | cells = newCells } ! []
+        GameMode mode ->
+            { model | gameMode = mode} ! []

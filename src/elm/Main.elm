@@ -11,7 +11,7 @@ import Messages exposing (..)
 
 init : ( Model, Cmd Msg )
 init =
-    ( Model [] False,  Random.generate NewGame (newCells cellSize))
+    ( Model [] False "normal",  Random.generate NewGame (newCells cellSize))
     -- initModel ! []
 
 subscriptions : Model -> Sub Msg

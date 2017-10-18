@@ -9,3 +9,4 @@ type Msg = NewGame (List Cell)
          | Flip Cell
          | Reset
          | Clear
+         | GameMode String

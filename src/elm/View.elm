@@ -1,7 +1,9 @@
 module View exposing (..)
 
-import Html exposing (Html, div, text, button)
-import Html.Events exposing (onClick)
+import Html exposing (Html, div, text, button, select)
+import Html.Attributes exposing (value)
+import Html.Events exposing (onClick, on, targetValue)
+import Json.Decode as Json
 import Svg exposing (..)
 import Svg.Attributes exposing (..)
 import Color exposing (..)
@@ -86,12 +88,21 @@ normalView cells =
                  ] []
         ) cells
 
+onChange : (String -> msg) -> Attribute msg
+onChange msg =
+    on "change" (Json.map msg targetValue)
+
 view : Model -> Html Msg
-view {cells, gameStatus} =
-    div [] 
-        [ normalView cells
+view {cells, gameMode, gameStatus} =
+    div []
+        [ (case gameMode of
+            "normal" -> normalView
+            "Hex" -> hexView
+            _ -> normalView) cells
         , Html.br [] []
         , button [ onClick Stop ] [ Html.text <| if gameStatus then "Stop" else "Start" ]
         , button [ onClick Reset ] [ Html.text "Reset" ]
         , button [ onClick Clear ] [ Html.text "Clear" ]
+        , select [ onChange GameMode ]
+            <| List.map (\x -> Html.option [ value x ] [ Html.text x ]) [ "Normal", "Hex" ]
         ]

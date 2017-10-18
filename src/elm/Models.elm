@@ -5,10 +5,11 @@ import Cell exposing (..)
 type alias Model = 
     { cells : List Cell
     , gameStatus : Bool
+    , gameMode : String
     }
 
 cellSize : Point
-cellSize = Point 32 32
+cellSize = Point 20 20
 
 -- initModel : Model
 -- initModel =
