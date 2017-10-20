@@ -6,7 +6,7 @@ import Time exposing (..)
 import View exposing (..)
 import Models exposing (..)
 import Update exposing (..)
-import Cell exposing (newCells)
+import Cell exposing (newCells, cellSize)
 import Messages exposing (..)
 
 init : ( Model, Cmd Msg )

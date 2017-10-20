@@ -1,5 +1,6 @@
 module Update exposing (..)
 
+import Array exposing (..)
 import Cell exposing (..)
 import Random exposing (..)
 import Models exposing (..)
@@ -35,7 +36,13 @@ countState list =
 
 collectCell : List Cell -> List Point -> List Cell
 collectCell cells adjacency =
-    List.filter (\cell -> List.any (\id -> cell.id == id) adjacency) cells
+    let
+        cellArray = Array.fromList cells
+    in
+        List.map (\p -> p.x + p.y * cellSize.x) adjacency
+        |> List.map (flip Array.get cellArray)
+        |> List.map (Maybe.withDefault (Cell (Point 0 0) Dead []))
+
 
 flipStatus : Status -> Status
 flipStatus status =
@@ -67,7 +74,8 @@ update msg model =
             let
                 newCells = List.map (\x -> if x == cell then {x | status = flipStatus cell.status} else x) model.cells
             in
-                { model | cells = newCells} ! []
+                Debug.log "cell" cell
+                |> always ({ model | cells = newCells} ! [])
         Reset ->
             (Model [] False model.gameMode, Random.generate NewGame (newCells cellSize))
         Clear ->

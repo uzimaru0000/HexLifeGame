@@ -22,6 +22,9 @@ type alias Cell =
     , adjacency : List Point
     }
 
+cellSize : Point
+cellSize = Point 16 16
+
 cellColor : Status -> Color
 cellColor status =
     case status of
@@ -64,7 +67,7 @@ connectCell id =
     , Point (id.x+1) id.y
     , Point (id.x-1) (id.y+1)
     , Point id.x (id.y+1)
-    ]
+    ] |> List.filter (\p -> p.x >= 0 || p.y >= 0)
 
 normalCellConnect : Point -> List Point
 normalCellConnect id =
@@ -76,4 +79,4 @@ normalCellConnect id =
     , Point (id.x-1) (id.y+1)
     , Point id.x (id.y+1)
     , Point (id.x+1) (id.y+1)
-    ]
+    ] |> List.filter (\p -> (p.x >= 0 && p.x < cellSize.x) || (p.y >= 0 && p.y < cellSize.y))

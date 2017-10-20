@@ -8,9 +8,6 @@ type alias Model =
     , gameMode : String
     }
 
-cellSize : Point
-cellSize = Point 20 20
-
 -- initModel : Model
 -- initModel =
 --     [ Cell (Point 0 0) Living []
